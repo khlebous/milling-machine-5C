@@ -18,7 +18,7 @@ class Cutter : public fe::Component
 	CLASS_DECLARATION(Cutter)
 
 public:
-	Cutter(float radius, float startHeight);
+	Cutter(float radius, float startHeight, int horizontalLvls, int roundLvls, float height);
 
 	float cutRadius;
 	std::vector<fe::VertexPN> vertices;
@@ -28,5 +28,5 @@ public:
 
 protected:
 	void InitUpperPart(int horizontalLvls, float startHeight, float height);
-	virtual void InitBottomPart(int horizontalLvls, int roundLvls) { }
+	virtual void InitBottomPart(int horizontalLvls, int roundLvls) = 0;
 };

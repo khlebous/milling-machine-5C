@@ -10,7 +10,10 @@ class SphericalCutter : public Cutter
 	CLASS_DECLARATION(SphericalCutter)
 
 public:
-	SphericalCutter(float radius) : Cutter(radius, radius) { }
+	SphericalCutter(float radius, int horizontalLvls, int roundLvls, float height) : Cutter(radius, radius, horizontalLvls, roundLvls, height)
+	{
+		InitBottomPart(horizontalLvls, roundLvls);
+	}
 
 private:
 	void InitBottomPart(int horizontalLvls, int roundLvls) final

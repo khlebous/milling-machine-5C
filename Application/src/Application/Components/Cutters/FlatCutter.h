@@ -8,7 +8,7 @@ class FlatCutter : public Cutter
 	CLASS_DECLARATION(FlatCutter)
 
 public:
-	FlatCutter(float radius) : Cutter(radius, 0) { }
+	FlatCutter(float radius, int horizontalLvls, int roundLvls, float height) : Cutter(radius, 0, horizontalLvls, roundLvls, height) { }
 
 private:
 };

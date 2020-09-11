@@ -54,7 +54,12 @@ fe::GameObject* AppLayer::CreateMaterial(fe::ResourceCollection* resources, fe::
 fe::GameObject* AppLayer::CreateCutter(fe::ResourceCollection* resources, fe::Scene& scene)
 {
 	fe::GameObject* millingObj = new fe::GameObject("Cutter");
-	millingObj->AddComponent<SphericalCutter>(3.0f);
+
+	float radius = 3.0f;
+	int horizontalLvls = 10;
+	int roundLvls = 10;
+	float height = 40;
+	millingObj->AddComponent<SphericalCutter>(radius, horizontalLvls, roundLvls, height);
 	scene.gameObjects.push_back(millingObj);
 	SphericalCutter& mm = millingObj->GetComponent<SphericalCutter>();
 	resources->Meshes.AddFromData(mm.vertices, mm.indices, "bb");

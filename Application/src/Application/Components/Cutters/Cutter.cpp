@@ -5,15 +5,11 @@ namespace sm = DirectX::SimpleMath;
 
 CLASS_DEFINITION(fe::Component, Cutter)
 
-Cutter::Cutter(float radius, float startHeight)
+Cutter::Cutter(float radius, float startHeight, int horizontalLvls, int roundLvls, float height)
 {
 	this->cutRadius = radius;
-	int horizontalLvls = 10;
-	int roundLvls = 10;
-	float height = 40;
-
+	
 	InitUpperPart(horizontalLvls, startHeight, height);
-	InitBottomPart(horizontalLvls, roundLvls);
 }
 
 void Cutter::InitUpperPart(int horizontalLvls, float startHeight, float height)
