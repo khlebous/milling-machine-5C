@@ -6,12 +6,7 @@
 #include <ImGui/imgui.h>
 #include <vector>
 
-//enum CutterType
-//{
-//	Flat = 0,
-//	Spherical = 1,
-//	Toroidal = 2,
-//};
+namespace sm = DirectX::SimpleMath;
 
 class Cutter : public fe::Component
 {
@@ -21,9 +16,12 @@ public:
 	Cutter(float radius, float startHeight, int horizontalLvls, int roundLvls, float height);
 
 	float cutRadius;
+	float height;
 	std::vector<fe::VertexPN> vertices;
 	std::vector<DWORD> indices;
 
+	virtual void SetPosition(const sm::Vector3& d0) { }
+	virtual void SetRotation(const sm::Vector3& d1, const sm::Vector3& d1u, const sm::Vector3& d1v) { }
 	void GetUI() final;
 
 protected:

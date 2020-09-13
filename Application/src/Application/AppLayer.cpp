@@ -24,8 +24,8 @@ bool AppLayer::Initialize(fe::ResourceCollection* resources, fe::Scene& scene, f
 	fe::GameObject* materialObj = CreateMaterial(resources, scene);
 
 	fe::GameObject* millingObj = CreateCutter(resources, scene);
-	//  millingObj->AddComponent<CutterMovement>(&surfaceObj->GetComponent<Surface>());
-	//  millingObj->GetComponent<CutterMovement>().instancedMesh = static_cast<fe::InstancedMesh*>(materialObj->GetComponent<fe::MeshRenderer>().GetMesh(0).mesh);
+	millingObj->AddComponent<CutterMovement>(&surfaceObj->GetComponent<Surface>());
+	millingObj->GetComponent<CutterMovement>().instancedMesh = static_cast<fe::InstancedMesh*>(materialObj->GetComponent<fe::MeshRenderer>().GetMesh(0).mesh);
 
 	this->scene = &scene;
 	this->input = input;
@@ -54,20 +54,29 @@ fe::GameObject* AppLayer::CreateMaterial(fe::ResourceCollection* resources, fe::
 fe::GameObject* AppLayer::CreateCutter(fe::ResourceCollection* resources, fe::Scene& scene)
 {
 	fe::GameObject* millingObj = new fe::GameObject("Cutter");
+	scene.gameObjects.push_back(millingObj);
 
 	float minorRadius = 1.0f;
 	float radius = 3.0f;
 	int horizontalLvls = 10;
 	int roundLvls = 10;
 	float height = 40;
-	//millingObj->AddComponent<SphericalCutter>(radius, horizontalLvls, roundLvls, height);
-	millingObj->AddComponent<ToroidalCutter>(radius, minorRadius, horizontalLvls, roundLvls, height);
-	scene.gameObjects.push_back(millingObj);
 
-	//SphericalCutter& mm = millingObj->GetComponent<SphericalCutter>();
-	ToroidalCutter& mm = millingObj->GetComponent<ToroidalCutter>();
+	if (true)
+	{
+		millingObj->AddComponent<SphericalCutter>(radius, horizontalLvls, roundLvls, height);
 
-	resources->Meshes.AddFromData(mm.vertices, mm.indices, "bb");
+		SphericalCutter& mm = millingObj->GetComponent<SphericalCutter>();
+		resources->Meshes.AddFromData(mm.vertices, mm.indices, "bb");
+	}
+	else
+	{
+		millingObj->AddComponent<ToroidalCutter>(radius, minorRadius, horizontalLvls, roundLvls, height);
+
+		ToroidalCutter& mm = millingObj->GetComponent<ToroidalCutter>();
+		resources->Meshes.AddFromData(mm.vertices, mm.indices, "bb");
+	}
+
 	fe::Mesh* bb = resources->Meshes.Get("bb");
 	fe::Material* material = new fe::Material();
 	millingObj->AddComponent<fe::MeshRenderer>(bb, material, resources->Shaders.GetVS("CutterShader"), resources->Shaders.GetPS("CutterShader"));

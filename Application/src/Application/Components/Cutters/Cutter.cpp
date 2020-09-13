@@ -8,6 +8,7 @@ CLASS_DEFINITION(fe::Component, Cutter)
 Cutter::Cutter(float radius, float startHeight, int horizontalLvls, int roundLvls, float height)
 {
 	this->cutRadius = radius;
+	this->height = height;
 	
 	InitUpperPart(horizontalLvls, startHeight, height);
 }

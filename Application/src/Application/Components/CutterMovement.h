@@ -6,6 +6,8 @@
 
 #include "Surface.h"
 
+class Cutter;
+
 class CutterMovement : public fe::Component
 {
 	CLASS_DECLARATION(CutterMovement)
@@ -15,7 +17,6 @@ public:
 
 	Surface* surface;
 	fe::InstancedMesh* instancedMesh;
-	fe::Transform* millingMachine;
 	float u, v;
 
 	void OnUpdate() final;
