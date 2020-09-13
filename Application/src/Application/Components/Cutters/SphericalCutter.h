@@ -15,8 +15,8 @@ public:
 		InitBottomPart(horizontalLvls, roundLvls);
 	}
 
-private:
-	void InitBottomPart(int horizontalLvls, int roundLvls) final
+protected:
+	void InitBottomPart(int horizontalLvls, int roundLvls) override final
 	{
 		for (int i = 0; i < horizontalLvls; i++)
 		{

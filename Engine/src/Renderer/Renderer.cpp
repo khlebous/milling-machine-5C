@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Renderer.h"
 #include "Graphics/Components/MeshRenderer.h"
-#include "Graphics/Components/ShaderConfiguration.h"
 #include "Constants/ShaderResourcesConstants.h"
 #include "Constants/CBConstants.h"
 
