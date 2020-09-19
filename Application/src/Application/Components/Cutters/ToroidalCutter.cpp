@@ -38,7 +38,7 @@ void ToroidalCutter::SetRotation(const sm::Vector3& d1, const sm::Vector3& d1u, 
 	GetOwner().GetComponent<fe::Transform>().SetRotation(cross, angle);
 }
 
-ToroidalCutter::ToroidalCutter(float majorRadius, float minorRadius, int horizontalLvls, int roundLvls, float height) : Cutter(majorRadius, 0.0f, horizontalLvls, roundLvls, height)
+ToroidalCutter::ToroidalCutter(float majorRadius, float minorRadius, int horizontalLvls, int roundLvls, float height) : Cutter(majorRadius, minorRadius, horizontalLvls, roundLvls, height)
 {
 	this->minorRadius = minorRadius;
 	this->majorRadius = majorRadius;
@@ -93,7 +93,7 @@ sm::Vector3 ToroidalCutter::GetTorusPoint(float majorRadius, float minorRadius, 
 {
 	float x = (majorRadius + minorRadius * cos(minorRadiusAngle)) * cos(majorRadiusAngle);
 	float z = (majorRadius + minorRadius * cos(minorRadiusAngle)) * sin(majorRadiusAngle);
-	float y = -(minorRadius * sin(minorRadiusAngle));
+	float y = -(minorRadius * sin(minorRadiusAngle)) + minorRadius;
 
 	return sm::Vector3(x, y, z);
 }
