@@ -21,7 +21,7 @@ public:
 	std::vector<DWORD> indices;
 
 	virtual void SetPosition(const sm::Vector3& d0) = 0;
-	virtual void SetRotation(const sm::Vector3& d1, const sm::Vector3& d1u, const sm::Vector3& d1v) { }
+	virtual void SetRotation(const sm::Vector3& d1, const sm::Vector3& d1u, const sm::Vector3& d1v) = 0;
 	void GetUI() final;
 
 protected:

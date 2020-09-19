@@ -8,6 +8,35 @@ void ToroidalCutter::SetPosition(const sm::Vector3& d0)
 	GetOwner().GetComponent<fe::Transform>().SetPosition(d0);
 }
 
+void ToroidalCutter::SetRotation(const sm::Vector3& d1, const sm::Vector3& d1u, const sm::Vector3& d1v)
+{
+	sm::Vector3 rot(d1u.Cross(d1v)); rot.Normalize();
+	sm::Vector3 cross = rot.Cross(sm::Vector3::Up); cross.Normalize();
+	float angle = acos(rot.Dot(sm::Vector3::Up));
+
+	if (cross.Length() < 0.001)
+	{
+		if (rot.Dot(sm::Vector3::Up) > 0) // Should be 1
+		{
+			cross = sm::Vector3::Up;
+			angle = 0;
+		}
+		else // -1
+		{
+			cross = sm::Vector3(0, 0, 1);
+			angle = DirectX::XM_PI;
+		}
+	}
+	else
+	{
+		sm::Vector3 add_cross = cross.Cross(sm::Vector3::Up);
+		if (add_cross.Dot(rot) < 0)
+			angle = -angle;
+	}
+
+	GetOwner().GetComponent<fe::Transform>().SetRotation(cross, angle);
+}
+
 ToroidalCutter::ToroidalCutter(float majorRadius, float minorRadius, int horizontalLvls, int roundLvls, float height) : Cutter(majorRadius, 0.0f, horizontalLvls, roundLvls, height)
 {
 	this->minorRadius = minorRadius;
