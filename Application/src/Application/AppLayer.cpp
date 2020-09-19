@@ -62,7 +62,7 @@ fe::GameObject* AppLayer::CreateCutter(fe::ResourceCollection* resources, fe::Sc
 	int roundLvls = 10;
 	float height = 40;
 
-	if (true)
+	if (false)
 	{
 		millingObj->AddComponent<SphericalCutter>(radius, horizontalLvls, roundLvls, height);
 

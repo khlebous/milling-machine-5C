@@ -1,6 +1,19 @@
 #include "ToroidalCutter.h"
+#include <Graphics/GameObjects/GameObject.h>
 
 CLASS_DEFINITION(Cutter, ToroidalCutter)
+
+void ToroidalCutter::SetPosition(const sm::Vector3& d0)
+{
+	GetOwner().GetComponent<fe::Transform>().SetPosition(d0);
+}
+
+ToroidalCutter::ToroidalCutter(float majorRadius, float minorRadius, int horizontalLvls, int roundLvls, float height) : Cutter(majorRadius, 0.0f, horizontalLvls, roundLvls, height)
+{
+	this->minorRadius = minorRadius;
+	this->majorRadius = majorRadius;
+	InitBottomPart(horizontalLvls, roundLvls);
+}
 
 void ToroidalCutter::InitBottomPart(int horizontalLvls, int roundLvls)
 {

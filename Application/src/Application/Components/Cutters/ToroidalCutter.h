@@ -10,12 +10,9 @@ class ToroidalCutter : public Cutter
 	CLASS_DECLARATION(ToroidalCutter)
 
 public:
-	ToroidalCutter(float majorRadius, float minorRadius, int horizontalLvls, int roundLvls, float height) : Cutter(majorRadius, 0.0f, horizontalLvls, roundLvls, height)
-	{
-		this->minorRadius = minorRadius;
-		this->majorRadius = majorRadius;
-		InitBottomPart(horizontalLvls, roundLvls);
-	}
+	ToroidalCutter(float majorRadius, float minorRadius, int horizontalLvls, int roundLvls, float height);
+
+	void SetPosition(const sm::Vector3& d0) final;
 
 protected:
 	void InitBottomPart(int horizontalLvls, int roundLvls) final;

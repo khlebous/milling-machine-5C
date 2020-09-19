@@ -1,5 +1,4 @@
 #include "SphericalCutter.h"
-
 #include <Graphics/GameObjects/GameObject.h>
 
 CLASS_DEFINITION(Cutter, SphericalCutter)

@@ -9,6 +9,7 @@ class FlatCutter : public Cutter
 
 public:
 	FlatCutter(float radius, int horizontalLvls, int roundLvls, float height) : Cutter(radius, 0, horizontalLvls, roundLvls, height) { }
+	void SetPosition(const sm::Vector3& d0) final { }
 
 private:
 };
