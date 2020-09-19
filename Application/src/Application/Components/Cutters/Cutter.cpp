@@ -10,8 +10,6 @@ Cutter::Cutter(float radius, float startHeight, int horizontalLvls, int roundLvl
 	this->cutRadius = radius;
 	this->height = height;
 	this->cutRadius2 = cutRadius * cutRadius;
-
-	InitUpperPart(horizontalLvls, startHeight, height);
 }
 
 void Cutter::InitUpperPart(int horizontalLvls, float startHeight, float height)

@@ -21,11 +21,11 @@ bool AppLayer::Initialize(fe::ResourceCollection* resources, fe::Scene& scene, f
 {
 	fe::GameObject* surfaceObj = CreateSurface(resources, scene);
 
-	fe::GameObject* materialObj = CreateMaterial(resources, scene);
+	//fe::GameObject* materialObj = CreateMaterial(resources, scene);
 
 	fe::GameObject* millingObj = CreateCutter(resources, scene);
 	millingObj->AddComponent<CutterMovement>(&surfaceObj->GetComponent<Surface>());
-	millingObj->GetComponent<CutterMovement>().instancedMesh = static_cast<fe::InstancedMesh*>(materialObj->GetComponent<fe::MeshRenderer>().GetMesh(0).mesh);
+	//millingObj->GetComponent<CutterMovement>().instancedMesh = static_cast<fe::InstancedMesh*>(materialObj->GetComponent<fe::MeshRenderer>().GetMesh(0).mesh);
 
 	this->scene = &scene;
 	this->input = input;

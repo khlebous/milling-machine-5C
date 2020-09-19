@@ -35,6 +35,7 @@ namespace fe
 
 		void SetRotation(const sm::Vector3& rot) { this->rotation = rot; }
 		void SetRotation(const sm::Vector3& rot, float angle) { this->rotationAxis = rot, this->rotationAngle = angle; }
+		void SetRotation(const sm::Matrix& mat) { this->rotMatrix = mat; }
 		void SetRotation(float x, float y, float z) { this->rotation = sm::Vector3(x, y, z); }
 		void AdjustRotation(const sm::Vector3& rot) { this->rotation += rot; }
 		void AdjustRotation(float x, float y, float z) { this->rotation += sm::Vector3(x, y, z); }
@@ -53,6 +54,7 @@ namespace fe
 
 		bool useRotationAxis = false;
 		sm::Vector3 rotationAxis;
+		sm::Matrix rotMatrix;
 		float rotationAngle;
 	};
 }

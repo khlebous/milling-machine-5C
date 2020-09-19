@@ -64,7 +64,7 @@ namespace fe
 		DirectX::XMMATRIX rotMatrix;
 		if (useRotationAxis)
 		{
-			rotMatrix = DirectX::XMMatrixRotationAxis(this->rotationAxis, this->rotationAngle);
+			rotMatrix = this->rotMatrix;// DirectX::XMMatrixRotationAxis(this->rotationAxis, this->rotationAngle);
 		}
 		else
 		{

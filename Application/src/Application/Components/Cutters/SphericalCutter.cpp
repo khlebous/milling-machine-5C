@@ -5,15 +5,16 @@ CLASS_DEFINITION(Cutter, SphericalCutter)
 
 SphericalCutter::SphericalCutter(float radius, int horizontalLvls, int roundLvls, float height) : Cutter(radius, radius, horizontalLvls, roundLvls, height)
 {
+	InitUpperPart(horizontalLvls, radius, height);
 	InitBottomPart(horizontalLvls, roundLvls);
 }
 
-void SphericalCutter::SetPosition(const sm::Vector3& d0)
+void SphericalCutter::SetPosition(const sm::Vector3& d0, const sm::Vector3& d1u, const sm::Vector3& d1v)
 {
 	GetOwner().GetComponent<fe::Transform>().SetPosition(d0);
 }
 
-void SphericalCutter::SetRotation(const sm::Vector3& d1, const sm::Vector3& d1u, const sm::Vector3& d1v)
+void SphericalCutter::SetRotation(const sm::Vector3& d1u, const sm::Vector3& d1v)
 {
 	sm::Vector3 rot(d1u.Cross(d1v)); rot.Normalize();
 	sm::Vector3 cross = rot.Cross(sm::Vector3::Up); cross.Normalize();
@@ -39,7 +40,8 @@ void SphericalCutter::SetRotation(const sm::Vector3& d1, const sm::Vector3& d1u,
 			angle = -angle;
 	}
 
-	GetOwner().GetComponent<fe::Transform>().SetRotation(cross, angle);
+	GetOwner().GetComponent<fe::Transform>().SetRotation(DirectX::XMMatrixRotationAxis(cross, angle));
+	//GetOwner().GetComponent<fe::Transform>().SetRotation(cross, angle);
 }
 
 bool SphericalCutter::IsNear(const sm::Vector3& cutterPos, const sm::Vector3& cutterUpPos, const sm::Vector3& voxelPos)

@@ -17,24 +17,25 @@ void CutterMovement::OnUpdate()
 	if (v > 1)
 		return;
 
-	gp_Pnt d0;
-	surface->BEZ->D0(u, v, d0);
-	sm::Vector3 d0_sm(d0.X(), d0.Y(), d0.Z());
-	cutter.SetPosition(d0_sm);
-
-	gp_Pnt d1;
+	gp_Pnt d0, d1;
 	gp_Vec d1u, d1v;
+
+	surface->BEZ->D0(u, v, d0);
 	surface->BEZ->D1(u, v, d1, d1u, d1v);
+
+	sm::Vector3 d0_sm(d0.X(), d0.Y(), d0.Z());
 	sm::Vector3 d1_sm(d1.X(), d1.Y(), d1.Z());
 	sm::Vector3 d1u_sm(d1u.X(), d1u.Y(), d1u.Z());
 	sm::Vector3 d1v_sm(d1v.X(), d1v.Y(), d1v.Z());
-	cutter.SetRotation(d1_sm, d1u_sm, d1v_sm);
+	
+	cutter.SetPosition(d0_sm, d1u_sm, d1v_sm);
+	cutter.SetRotation( d1u_sm, d1v_sm);
 
-	u += 0.01;
+	u += 0.001;
 	if (u > 1)
 	{
 		u = 0;
-		v += 0.01;
+		v += 0.001;
 	}
 
 	if (!instancedMesh)

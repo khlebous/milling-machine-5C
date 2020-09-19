@@ -3,14 +3,16 @@
 
 CLASS_DEFINITION(Cutter, ToroidalCutter)
 
-void ToroidalCutter::SetPosition(const sm::Vector3& d0)
+void ToroidalCutter::SetPosition(const sm::Vector3& d0, const sm::Vector3& d1u, const sm::Vector3& d1v)
 {
-	GetOwner().GetComponent<fe::Transform>().SetPosition(d0);
+	sm::Vector3 normal(d1u.Cross(d1v)); normal.Normalize();
+	sm::Vector3 pos = d0 + normal * minorRadius;
+
+	GetOwner().GetComponent<fe::Transform>().SetPosition(pos);
 }
 
-void ToroidalCutter::SetRotation(const sm::Vector3& d1, const sm::Vector3& d1u, const sm::Vector3& d1v)
+void ToroidalCutter::SetRotation(const sm::Vector3& d1u, const sm::Vector3& d1v)
 {
-	// TODO
 	sm::Vector3 rot(d1u.Cross(d1v)); rot.Normalize();
 	sm::Vector3 cross = rot.Cross(sm::Vector3::Up); cross.Normalize();
 	float angle = acos(rot.Dot(sm::Vector3::Up));
@@ -35,14 +37,42 @@ void ToroidalCutter::SetRotation(const sm::Vector3& d1, const sm::Vector3& d1u, 
 			angle = -angle;
 	}
 
-	GetOwner().GetComponent<fe::Transform>().SetRotation(cross, angle);
+	sm::Matrix rotMatrix1 = DirectX::XMMatrixRotationAxis(sm::Vector3::Left, DirectX::XM_PIDIV4);
+	sm::Matrix rotMatrix2 = DirectX::XMMatrixRotationAxis(cross, angle);
+	GetOwner().GetComponent<fe::Transform>().SetRotation(rotMatrix1 * rotMatrix2);
 }
 
 ToroidalCutter::ToroidalCutter(float majorRadius, float minorRadius, int horizontalLvls, int roundLvls, float height) : Cutter(majorRadius, minorRadius, horizontalLvls, roundLvls, height)
 {
 	this->minorRadius = minorRadius;
 	this->majorRadius = majorRadius;
+
+	InitUpperPart(horizontalLvls, 0, height);
 	InitBottomPart(horizontalLvls, roundLvls);
+}
+
+void ToroidalCutter::InitUpperPart(int horizontalLvls, float startHeight, float height)
+{
+	for (int i = 0; i < horizontalLvls; i++)
+	{
+		float angle = DirectX::XM_2PI * i / horizontalLvls;
+		float angle2 = DirectX::XM_2PI * (i + 1) / horizontalLvls;
+		sm::Vector3 a = sm::Vector3(cos(angle), sin(angle), 0);	a.Normalize();
+		sm::Vector3 b = sm::Vector3(cos(angle2), sin(angle2), 0); b.Normalize();
+
+		int count = vertices.size();
+		vertices.emplace_back(cutRadius * a.x, startHeight, cutRadius * a.y + majorRadius - minorRadius,
+			a.x, a.y, 0);
+		vertices.emplace_back(cutRadius * a.x, height, cutRadius * a.y + majorRadius - minorRadius,
+			a.x, a.y, 0);
+		vertices.emplace_back(cutRadius * b.x, height, cutRadius * b.y + majorRadius - minorRadius,
+			b.x, b.y, 0);
+		vertices.emplace_back(cutRadius * b.x, startHeight, cutRadius * b.y + majorRadius - minorRadius,
+			b.x, b.y, 0);
+
+		indices.push_back(count); indices.push_back(count + 1); indices.push_back(count + 2);
+		indices.push_back(count); indices.push_back(count + 2); indices.push_back(count + 3);
+	}
 }
 
 void ToroidalCutter::InitBottomPart(int horizontalLvls, int roundLvls)
@@ -92,15 +122,14 @@ void ToroidalCutter::InitBottomPart(int horizontalLvls, int roundLvls)
 sm::Vector3 ToroidalCutter::GetTorusPoint(float majorRadius, float minorRadius, float majorRadiusAngle, float minorRadiusAngle)
 {
 	float x = (majorRadius + minorRadius * cos(minorRadiusAngle)) * cos(majorRadiusAngle);
-	float z = (majorRadius + minorRadius * cos(minorRadiusAngle)) * sin(majorRadiusAngle);
-	float y = -(minorRadius * sin(minorRadiusAngle)) + minorRadius;
+	float z = (majorRadius + minorRadius * cos(minorRadiusAngle)) * sin(majorRadiusAngle) + majorRadius;
+	float y = -(minorRadius * sin(minorRadiusAngle));
 
 	return sm::Vector3(x, y, z);
 }
 
 bool ToroidalCutter::IsNear(const sm::Vector3& cutterPos, const sm::Vector3& cutterUpPos, const sm::Vector3& voxelPos)
 {
-	// TODO
 	if (IsNearBottomPart(cutterPos, voxelPos))
 		return true;
 
@@ -112,7 +141,8 @@ bool ToroidalCutter::IsNear(const sm::Vector3& cutterPos, const sm::Vector3& cut
 
 bool ToroidalCutter::IsNearBottomPart(const sm::Vector3& cutterPos, const sm::Vector3& voxelPos)
 {
-	return sm::Vector3::DistanceSquared(cutterPos, voxelPos) < cutRadius2;
+	// TODO
+	return false;
 }
 
 bool ToroidalCutter::IsNearUpperPart(const sm::Vector3& v, const sm::Vector3& w, const sm::Vector3& voxelPos)
