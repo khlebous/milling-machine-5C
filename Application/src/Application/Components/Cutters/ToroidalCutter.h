@@ -14,9 +14,12 @@ public:
 
 	void SetPosition(const sm::Vector3& d0) final;
 	void SetRotation(const sm::Vector3& d1, const sm::Vector3& d1u, const sm::Vector3& d1v);
+	bool IsNear(const sm::Vector3& cutterPos, const sm::Vector3& cutterUpPos, const sm::Vector3& voxelPos) final;
 
 protected:
 	void InitBottomPart(int horizontalLvls, int roundLvls) final;
+	bool IsNearBottomPart(const sm::Vector3& cutterPos, const sm::Vector3& voxelPos);
+	bool IsNearUpperPart(const sm::Vector3& cutterPos, const sm::Vector3& cutterUpPos, const sm::Vector3& voxelPos);
 
 private:
 	float majorRadius;

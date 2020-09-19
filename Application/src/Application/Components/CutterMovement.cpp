@@ -52,8 +52,8 @@ void CutterMovement::OnUpdate()
 		DirectX::XMFLOAT4 tmp = instancedMesh->mInstancedData[i].ipos;
 		sm::Vector3 voxelPos = sm::Vector3(tmp.x, tmp.y, tmp.z);
 
-		//if(!cutter.IsNear(cutterBottomPos, cutterUpPos, voxelPos))
-		//	mInstancedDatas.emplace_back(instancedMesh->mInstancedData[i]);
+		if(!cutter.IsNear(cutterBottomPos, cutterUpPos, voxelPos))
+			mInstancedDatas.emplace_back(instancedMesh->mInstancedData[i]);
 	}
-	//instancedMesh->SetData(mInstancedDatas);
+	instancedMesh->SetData(mInstancedDatas);
 }

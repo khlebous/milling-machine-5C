@@ -6,8 +6,6 @@ CLASS_DEFINITION(Cutter, SphericalCutter)
 SphericalCutter::SphericalCutter(float radius, int horizontalLvls, int roundLvls, float height) : Cutter(radius, radius, horizontalLvls, roundLvls, height)
 {
 	InitBottomPart(horizontalLvls, roundLvls);
-	
-	cutRadius2 = cutRadius * cutRadius;
 }
 
 void SphericalCutter::SetPosition(const sm::Vector3& d0)

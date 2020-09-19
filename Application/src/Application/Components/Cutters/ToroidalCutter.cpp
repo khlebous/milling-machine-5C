@@ -10,6 +10,7 @@ void ToroidalCutter::SetPosition(const sm::Vector3& d0)
 
 void ToroidalCutter::SetRotation(const sm::Vector3& d1, const sm::Vector3& d1u, const sm::Vector3& d1v)
 {
+	// TODO
 	sm::Vector3 rot(d1u.Cross(d1v)); rot.Normalize();
 	sm::Vector3 cross = rot.Cross(sm::Vector3::Up); cross.Normalize();
 	float angle = acos(rot.Dot(sm::Vector3::Up));
@@ -95,4 +96,33 @@ sm::Vector3 ToroidalCutter::GetTorusPoint(float majorRadius, float minorRadius, 
 	float y = -(minorRadius * sin(minorRadiusAngle));
 
 	return sm::Vector3(x, y, z);
+}
+
+bool ToroidalCutter::IsNear(const sm::Vector3& cutterPos, const sm::Vector3& cutterUpPos, const sm::Vector3& voxelPos)
+{
+	// TODO
+	if (IsNearBottomPart(cutterPos, voxelPos))
+		return true;
+
+	if (IsNearUpperPart(cutterPos, cutterUpPos, voxelPos))
+		return true;
+
+	return false;
+}
+
+bool ToroidalCutter::IsNearBottomPart(const sm::Vector3& cutterPos, const sm::Vector3& voxelPos)
+{
+	return sm::Vector3::DistanceSquared(cutterPos, voxelPos) < cutRadius2;
+}
+
+bool ToroidalCutter::IsNearUpperPart(const sm::Vector3& v, const sm::Vector3& w, const sm::Vector3& voxelPos)
+{
+	float l2 = sm::Vector3::DistanceSquared(v, w);
+	if (l2 == 0.0)
+		return sm::Vector3::Distance(voxelPos, v);
+
+	float t = max(0, min(1, (voxelPos - v).Dot(w - v) / l2));
+	sm::Vector3 projection = v + t * (w - v);
+
+	return sm::Vector3::Distance(voxelPos, projection) < cutRadius;
 }
