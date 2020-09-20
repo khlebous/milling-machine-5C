@@ -27,9 +27,9 @@ void CutterMovement::OnUpdate()
 	sm::Vector3 d1_sm(d1.X(), d1.Y(), d1.Z());
 	sm::Vector3 d1u_sm(d1u.X(), d1u.Y(), d1u.Z());
 	sm::Vector3 d1v_sm(d1v.X(), d1v.Y(), d1v.Z());
-	
+
 	cutter.SetPosition(d0_sm, d1u_sm, d1v_sm);
-	cutter.SetRotation( d1u_sm, d1v_sm);
+	cutter.SetRotation(d1u_sm, d1v_sm);
 
 	u += 0.01;
 	if (u > 1)
@@ -44,16 +44,19 @@ void CutterMovement::OnUpdate()
 	std::vector<fe::InstancedData> mInstancedDatas;
 	mInstancedDatas.reserve(instancedMesh->mInstancedData.size());
 
-	sm::Matrix rotMatrix = GetOwner().GetComponent<fe::Transform>().GetModelMatrix();
-	sm::Vector3 cutterBottomPos = sm::Vector3::Transform(sm::Vector3(0, cutter.cutRadius, 0), rotMatrix);
-	sm::Vector3 cutterUpPos = sm::Vector3::Transform(sm::Vector3(0, cutter.height, 0), rotMatrix);
+	sm::Vector3 cutterBottomPos = sm::Vector3(0, cutter.cutRadius, 0);
+	sm::Vector3 cutterUpPos = sm::Vector3(0, cutter.height, 0);
+
+	auto modelMatrix = GetOwner().GetComponent<fe::Transform>().GetModelMatrix();
+	auto invModelMatrix = modelMatrix.Invert();
 
 	for (int i = 0; i < instancedMesh->mInstancedData.size(); i++)
 	{
 		DirectX::XMFLOAT4 tmp = instancedMesh->mInstancedData[i].ipos;
 		sm::Vector3 voxelPos = sm::Vector3(tmp.x, tmp.y, tmp.z);
+		auto localVoxelPos = sm::Vector3::Transform(voxelPos, invModelMatrix);
 
-		if(!cutter.IsNear(cutterBottomPos, cutterUpPos, voxelPos))
+		if (!cutter.IsNear(cutterBottomPos, cutterUpPos, localVoxelPos))
 			mInstancedDatas.emplace_back(instancedMesh->mInstancedData[i]);
 	}
 	instancedMesh->SetData(mInstancedDatas);

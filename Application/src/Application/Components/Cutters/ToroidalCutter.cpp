@@ -65,10 +65,10 @@ void ToroidalCutter::InitUpperPart(int horizontalLvls, float startHeight, float 
 		sm::Vector3 b = sm::Vector3(cos(angle2), sin(angle2), 0); b.Normalize();
 
 		int count = vertices.size();
-		vertices.emplace_back(cutRadius * a.x, startHeight, cutRadius * a.y, a.x, a.y, 0);
-		vertices.emplace_back(cutRadius * a.x, height, cutRadius * a.y, a.x, a.y, 0);
-		vertices.emplace_back(cutRadius * b.x, height, cutRadius * b.y, b.x, b.y, 0);
-		vertices.emplace_back(cutRadius * b.x, startHeight, cutRadius * b.y, b.x, b.y, 0);
+		vertices.emplace_back(cutRadius * a.x, startHeight, cutRadius * a.y + majorRadius - minorRadius, a.x, a.y, 0);
+		vertices.emplace_back(cutRadius * a.x, height, cutRadius * a.y + majorRadius - minorRadius, a.x, a.y, 0);
+		vertices.emplace_back(cutRadius * b.x, height, cutRadius * b.y + majorRadius - minorRadius, b.x, b.y, 0);
+		vertices.emplace_back(cutRadius * b.x, startHeight, cutRadius * b.y + majorRadius - minorRadius, b.x, b.y, 0);
 
 		indices.push_back(count); indices.push_back(count + 1); indices.push_back(count + 2);
 		indices.push_back(count); indices.push_back(count + 2); indices.push_back(count + 3);
@@ -122,7 +122,7 @@ void ToroidalCutter::InitBottomPart(int horizontalLvls, int roundLvls)
 sm::Vector3 ToroidalCutter::GetTorusPoint(float majorRadius, float minorRadius, float majorRadiusAngle, float minorRadiusAngle)
 {
 	float x = (majorRadius + minorRadius * cos(minorRadiusAngle)) * cos(majorRadiusAngle);
-	float z = (majorRadius + minorRadius * cos(minorRadiusAngle)) * sin(majorRadiusAngle);
+	float z = (majorRadius + minorRadius * cos(minorRadiusAngle)) * sin(majorRadiusAngle) + majorRadius;
 	float y = -(minorRadius * sin(minorRadiusAngle));
 
 	return sm::Vector3(x, y, z);
@@ -142,17 +142,11 @@ bool ToroidalCutter::IsNear(const sm::Vector3& cutterPos, const sm::Vector3& cut
 bool ToroidalCutter::IsNearBottomPart(const sm::Vector3& cutterPos, const sm::Vector3& voxelPos)
 {
 	// check if voxel pos inside torus
-
-	auto modelMatrix = GetOwner().GetComponent<fe::Transform>().GetModelMatrix();
-	auto translation = modelMatrix.Translation();
-	modelMatrix.Translation(sm::Vector3::Zero);
-	auto invModelMatrix = modelMatrix.Transpose();
-	invModelMatrix.Translation(-translation);
-
-	auto localVoxelPos = sm::Vector3::Transform(voxelPos, invModelMatrix);
-
-	auto localVoxelPosSquared = localVoxelPos * localVoxelPos;
 	const float MRadius = majorRadius - minorRadius;
+
+	auto localVoxelPos = voxelPos;
+	localVoxelPos.z -= MRadius;
+	auto localVoxelPosSquared = localVoxelPos * localVoxelPos;
 
 	float tmp = sqrt(localVoxelPosSquared.x + localVoxelPosSquared.z) - MRadius;
 	return (tmp * tmp + localVoxelPosSquared.y) < (minorRadius * minorRadius);
@@ -160,12 +154,18 @@ bool ToroidalCutter::IsNearBottomPart(const sm::Vector3& cutterPos, const sm::Ve
 
 bool ToroidalCutter::IsNearUpperPart(const sm::Vector3& v, const sm::Vector3& w, const sm::Vector3& voxelPos)
 {
-	float l2 = sm::Vector3::DistanceSquared(v, w);
-	if (l2 == 0.0)
-		return sm::Vector3::Distance(voxelPos, v);
+	const float MRadius = majorRadius - minorRadius;
+	auto cutterBottom = v;
+	auto cutterTop = w;
+	cutterBottom.z += MRadius;
+	cutterTop.z += MRadius;
 
-	float t = max(0, min(1, (voxelPos - v).Dot(w - v) / l2));
-	sm::Vector3 projection = v + t * (w - v);
+	float l2 = sm::Vector3::DistanceSquared(cutterBottom, cutterTop);
+	if (l2 == 0.0)
+		return sm::Vector3::Distance(voxelPos, cutterBottom);
+
+	float t = max(0, min(1, (voxelPos - cutterBottom).Dot(cutterTop - cutterBottom) / l2));
+	sm::Vector3 projection = cutterBottom + t * (cutterTop - cutterBottom);
 
 	return sm::Vector3::Distance(voxelPos, projection) < majorRadius;
 }

@@ -57,7 +57,7 @@ bool SphericalCutter::IsNear(const sm::Vector3& cutterPos, const sm::Vector3& cu
 
 bool SphericalCutter::IsNearBottomPart(const sm::Vector3& cutterPos, const sm::Vector3& voxelPos)
 {
-	return sm::Vector3::DistanceSquared(cutterPos, voxelPos) < cutRadius2;
+	return voxelPos.Dot(voxelPos) < cutRadius2;
 }
 
 bool SphericalCutter::IsNearUpperPart(const sm::Vector3& v, const sm::Vector3& w, const sm::Vector3& voxelPos)
