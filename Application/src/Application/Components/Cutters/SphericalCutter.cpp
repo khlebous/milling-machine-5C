@@ -93,7 +93,7 @@ void SphericalCutter::InitBottomPart(int horizontalLvls, int roundLvls)
 			vertices.emplace_back(cutRadius * a.x, cutRadius * (1 - a.z), cutRadius * a.y, a.x, a.y, a.z);
 			vertices.emplace_back(cutRadius * a2.x, cutRadius * (1 - a2.z), cutRadius * a2.y, a2.x, a2.y, a2.z);
 			vertices.emplace_back(cutRadius * b2.x, cutRadius * (1 - b2.z), cutRadius * b2.y, b2.x, b2.y, b2.z);
-			vertices.emplace_back(cutRadius * b.x, cutRadius * (1 - b.z), cutRadius * b.y, b2.x, b.y, b.z);
+			vertices.emplace_back(cutRadius * b.x, cutRadius * (1 - b.z), cutRadius * b.y, b.x, b.y, b.z);
 
 			indices.push_back(count); indices.push_back(count + 1); indices.push_back(count + 2);
 			indices.push_back(count); indices.push_back(count + 2); indices.push_back(count + 3);
