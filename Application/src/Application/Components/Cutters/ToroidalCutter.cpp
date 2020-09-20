@@ -3,7 +3,6 @@
 
 CLASS_DEFINITION(Cutter, ToroidalCutter)
 
-constexpr float ANGLE = DirectX::XM_PIDIV4;
 
 void ToroidalCutter::SetPosition(const sm::Vector3& d0, const sm::Vector3& d1u, const sm::Vector3& d1v)
 {
@@ -39,7 +38,7 @@ void ToroidalCutter::SetRotation(const sm::Vector3& d1u, const sm::Vector3& d1v)
 			angle = -angle;
 	}
 
-	sm::Matrix rotMatrix1 = DirectX::XMMatrixRotationAxis(sm::Vector3::Left, ANGLE);
+	sm::Matrix rotMatrix1 = DirectX::XMMatrixRotationAxis(sm::Vector3::Left, alpha);
 	sm::Matrix rotMatrix2 = DirectX::XMMatrixRotationAxis(cross, angle);
 	GetOwner().GetComponent<fe::Transform>().SetRotation(rotMatrix1 * rotMatrix2);
 }
@@ -48,6 +47,7 @@ ToroidalCutter::ToroidalCutter(float majorRadius, float minorRadius, int horizon
 {
 	this->minorRadius = minorRadius;
 	this->majorRadius = majorRadius;
+	this->alpha = DirectX::XM_PIDIV4;
 
 	InitUpperPart(horizontalLvls, 0, height);
 	InitBottomPart(horizontalLvls, roundLvls);
@@ -168,4 +168,15 @@ bool ToroidalCutter::IsNearUpperPart(const sm::Vector3& v, const sm::Vector3& w,
 	sm::Vector3 projection = cutterBottom + t * (cutterTop - cutterBottom);
 
 	return sm::Vector3::Distance(voxelPos, projection) < majorRadius;
+}
+
+void ToroidalCutter::GetUI()
+{
+	if (ImGui::TreeNodeEx("Toroidal Cutter", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::DragFloat("radius", &cutRadius);
+		ImGui::SliderAngle("alpha", &alpha, 1, 89);
+
+		ImGui::TreePop();
+	}
 }

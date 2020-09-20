@@ -15,6 +15,7 @@ public:
 	void SetPosition(const sm::Vector3& d0, const sm::Vector3& d1u, const sm::Vector3& d1v) final;
 	void SetRotation(const sm::Vector3& d1u, const sm::Vector3& d1v);
 	bool IsNear(const sm::Vector3& cutterPos, const sm::Vector3& cutterUpPos, const sm::Vector3& voxelPos) final;
+	void GetUI() final;
 
 protected:
 	void InitUpperPart(int horizontalLvls, float startHeight, float height);
@@ -25,6 +26,7 @@ protected:
 private:
 	float majorRadius;
 	float minorRadius;
+	float alpha;
 
 	sm::Vector3 GetTorusPoint(float majorRadius, float minorRadius, float majorRadiusAngle, float minorRadiusAngle);
 };

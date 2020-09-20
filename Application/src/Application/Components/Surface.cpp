@@ -16,7 +16,7 @@ Surface::Surface()
 		points.push_back(vector);
 		for (int j = 0; j < size; j++)
 		{
-			if (false)
+			if (true)
 			{
 				poles(i, j).SetCoord(-i * scale + 50, 10, j * scale - 10);
 				points[i].push_back(sm::Vector3(-i * scale + 50, 10, j * scale - 10));
