@@ -147,12 +147,6 @@ bool ToroidalCutter::IsNearBottomPart(const sm::Vector3& cutterPos, const sm::Ve
 
 bool ToroidalCutter::IsNearUpperPart(const sm::Vector3& v, const sm::Vector3& w, const sm::Vector3& voxelPos)
 {
-	float l2 = sm::Vector3::DistanceSquared(v, w);
-	if (l2 == 0.0)
-		return sm::Vector3::Distance(voxelPos, v);
-
-	float t = max(0, min(1, (voxelPos - v).Dot(w - v) / l2));
-	sm::Vector3 projection = v + t * (w - v);
-
-	return sm::Vector3::Distance(voxelPos, projection) < cutRadius;
+	// TODO
+	return false;
 }

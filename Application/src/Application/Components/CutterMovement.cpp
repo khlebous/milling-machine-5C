@@ -31,11 +31,11 @@ void CutterMovement::OnUpdate()
 	cutter.SetPosition(d0_sm, d1u_sm, d1v_sm);
 	cutter.SetRotation( d1u_sm, d1v_sm);
 
-	u += 0.001;
+	u += 0.01;
 	if (u > 1)
 	{
 		u = 0;
-		v += 0.001;
+		v += 0.01;
 	}
 
 	if (!instancedMesh)
